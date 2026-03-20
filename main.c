@@ -32,27 +32,54 @@ int main() {
         return 1;
     }
 
-    while (choice != 4) {
-
     t_calc(t, tk, tn, &dt, n);   
 
     Uvx_calc(Uvx, &Uvx_max, &Uvx_min, t, n, t1, tn, a, b);
 
     Uvix_calc(Uvix, Uvx, n, Uvx1, Uvx2, U1, U2, &Uvix_max, &Uvix_min);
 
-    print_func(t, Uvx, Uvix, n);
-
     leading_edge(Uvx, Uvix, Uvx_min, Uvix_min, Uvx_max, Uvix_max, &dlit_vx, &dlit_vix, dt, n);
 
-    printf("Длина пререднего фронта для входного напряжения (Uvx): %f\n", dlit_vx);
-    printf("Длина пререднего фронта для выходного напряжения (Uvix): %f\n", dlit_vix);
-    
+
+    while (choice != 5) {
+        printf("\n");
+		printf("======Меню======\n");
+		printf("1. Вывод таблицы входного и выходного напряжения в терминал\n");
+		printf("2. Вывод продолжительности переднего фронта в терминал\n");
+		printf("3. Сохренение всех данных в файл\n");
+		printf("4. Открытие графиков в программе wxMaxima\n");
+        printf("5. Выход из программы\n");
+    	printf("Выберите пункт меню: ");
+    	scanf("%d", &choice);
+        printf("\n");
+
+        switch (choice)
+        {
+        case 1:
+            print_func(t, Uvx, Uvix, n);
+            break;
+        case 2:
+            printf("Длина пререднего фронта для входного напряжения (Uvx): %f\n", dlit_vx);
+            printf("Длина пререднего фронта для выходного напряжения (Uvix):%f\n", dlit_vix);
+            break;
+        case 3:
+            printf("3");
+            break;
+        case 4: 
+            printf("4");
+            break;
+        case 5:
+            printf("Выход из программы\n");
+            break;
+        default:
+            printf("Неверный выбор. Попробуйте снова.\n");
+        }
+    }
     free(t);
     free(Uvx);
     free(Uvix);
-    printf("\nНажмите Enter для завершения...");
-    while (getchar() != '\n');
-    getchar();
+    // printf("\nНажмите Enter для завершения...");
+    // while (getchar() != '\n');
+    // getchar();
     return 0;
-    }
 }
