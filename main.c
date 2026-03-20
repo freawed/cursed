@@ -16,6 +16,7 @@ int main() {
     float tn = 10, tk = 35, dt;
     float t1 = 22.5, a = 12, b = 12;
     float Uvx1 = 20, Uvx2 = 100, U1 = 20, U2 = 150;
+    const char *filename = "output.txt";
   
     printf("Введите кол-во точек для контрольного расчета: ");
     if (scanf("%d", &n) != 1 || n <= 1) {
@@ -46,7 +47,7 @@ int main() {
 		printf("======Меню======\n");
 		printf("1. Вывод таблицы входного и выходного напряжения в терминал\n");
 		printf("2. Вывод продолжительности переднего фронта в терминал\n");
-		printf("3. Сохренение всех данных в файл\n");
+		printf("3. Сохранение всех данных в файл\n");
 		printf("4. Открытие графиков в программе wxMaxima\n");
         printf("5. Выход из программы\n");
     	printf("Выберите пункт меню: ");
@@ -59,10 +60,11 @@ int main() {
             print_func(t, Uvx, Uvix, n);
             break;
         case 2:
-            printf("Длина пререднего фронта для входного напряжения (Uvx): %f\n", dlit_vx);
-            printf("Длина пререднего фронта для выходного напряжения (Uvix):%f\n", dlit_vix);
+            printf("Длина переднего фронта для входного напряжения (Uvx): %f\n", dlit_vx);
+            printf("Длина переднего фронта для выходного напряжения (Uvix):%f\n", dlit_vix);
             break;
         case 3:
+            print_file_func(filename, t, Uvx, Uvix, n, dlit_vx, dlit_vix);
             printf("3");
             break;
         case 4: 

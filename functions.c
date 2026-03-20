@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "functions.h"
 
 void t_calc(float* t, float tk, float tn, float* dt, int n) {
@@ -80,4 +81,26 @@ void print_func(float* t, float* Uvx, float* Uvix, int n) {
                i, t[i], Uvx[i], Uvix[i]);
     }
     printf("+-----+----------+----------+----------+\n");
+}
+
+
+void print_file_func(const char *filename, float* t, float* Uvx, float* Uvix, int n, float dlit_vx, float dlit_vix) {
+    FILE *file = fopen(filename, "w");
+	if (file == NULL) {
+		printf("Error by print_file, file not open\n"); 
+		exit(1); 
+	}
+    fprintf(file, "+-----+----------+----------+----------+\n");
+    fprintf(file, "|  i  |    t     |   Uvx    |   Uvix   |\n");
+    fprintf(file, "+-----+----------+----------+----------+\n");
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "| %3d | %8.3f | %8.3f | %8.3f |\n",
+               i, t[i], Uvx[i], Uvix[i]);
+    }
+    fprintf(file, "+-----+----------+----------+----------+\n");
+    fprintf(file, "\n");
+    fprintf(file, "Длина переднего фронта для входного напряжения (Uvx): %f\n", dlit_vx);
+    fprintf(file, "Длина переднего фронта для выходного напряжения (Uvix):%f\n", dlit_vix);
+    printf("Все данные записаны в файл");
+    fclose(file);
 }
