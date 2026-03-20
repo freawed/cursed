@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdio.h>
 #include "functions.h"
 
 void t_calc(float* t, float tk, float tn, float* dt, int n) {
@@ -28,7 +29,6 @@ void Uvx_calc(float* Uvx, float* Uvx_max, float* Uvx_min, float* t, int n, float
 }
 
 
-
 void Uvix_calc(float* Uvix, float* Uvx, int n, float Uvx1, float Uvx2, float U1, float U2, float* Uvix_max, float* Uvix_min) {
 
     for (int i = 0; i < n; i++) {
@@ -51,7 +51,6 @@ void Uvix_calc(float* Uvix, float* Uvx, int n, float Uvx1, float Uvx2, float U1,
 }
 
 
-
 void leading_edge(float* Uvx, float* Uvix, float Uvx_min, float Uvix_min, float Uvx_max, float Uvix_max, float* dlit_vx, float* dlit_vix, float dt, int n) {
 
     float Uvx_fr1 = Uvx_min + 0.9 * (Uvx_max - Uvx_min);
@@ -68,4 +67,17 @@ void leading_edge(float* Uvx, float* Uvix, float Uvx_min, float Uvix_min, float 
         if (Uvix[i] > Uvix_fr2 && Uvix[i] < Uvix_fr1 && Uvix[i + 1] > Uvix[i]) {
             *dlit_vix += dt;
         }
+}
+
+
+void print_func(float* t, float* Uvx, float* Uvix, int n) {
+    printf("\n");
+    printf("+-----+----------+----------+----------+\n");
+    printf("|  i  |    t     |   Uvx    |   Uvix   |\n");
+    printf("+-----+----------+----------+----------+\n");
+    for (int i = 0; i < n; i++) {
+        printf("| %3d | %8.3f | %8.3f | %8.3f |\n",
+               i, t[i], Uvx[i], Uvix[i]);
+    }
+    printf("+-----+----------+----------+----------+\n");
 }
