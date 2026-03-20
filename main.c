@@ -65,10 +65,9 @@ int main() {
             break;
         case 3:
             print_file_func(filename, t, Uvx, Uvix, n, dlit_vx, dlit_vix);
-            printf("3");
             break;
         case 4: 
-            printf("4");
+            system("\"C:\\maxima-5.49.0\\bin\\wxmaxima.exe\" control_calculation.wxmx");
             break;
         case 5:
             printf("Выход из программы\n");
@@ -80,8 +79,5 @@ int main() {
     free(t);
     free(Uvx);
     free(Uvix);
-    // printf("\nНажмите Enter для завершения...");
-    // while (getchar() != '\n');
-    // getchar();
     return 0;
 }
