@@ -2,22 +2,23 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-//chcp 65001 - для текста на русском в консоль
+// chcp 65001 - для текста на русском в консоль
 
 
 
 int main() {
     int choice = 0;
     float *t, *Uvx, *Uvix;
-    int n, i;
+    int n;
     float dlit_vx = 0.0f, dlit_vix = 0.0f;
-    float Uvx_fr1, Uvix_fr1, Uvx_fr2, Uvix_fr2;
     float Uvx_max = -10000, Uvx_min = 10000, Uvix_max = -10000, Uvix_min = 10000; 
-    float tn = 10, tk = 35, dt;
+    float tn = 10, tk = 35, dt; // считать с клавиатуры потом
     float t1 = 22.5, a = 12, b = 12;
     float Uvx1 = 20, Uvx2 = 100, U1 = 20, U2 = 150;
-    const char *filename = "output.txt";
-  
+                                  
+    read_zast();
+    printf("\n"); 
+
     printf("Введите кол-во точек для контрольного расчета: ");
     if (scanf("%d", &n) != 1 || n <= 1) {
         fprintf(stderr, "Ошибка: Некорректное количество точек.\n");
@@ -47,7 +48,7 @@ int main() {
 		printf("======Меню======\n");
 		printf("1. Вывод таблицы входного и выходного напряжения в терминал\n");
 		printf("2. Вывод продолжительности переднего фронта в терминал\n");
-		printf("3. Сохранение всех данных в файл\n");
+		printf("3. Сохранение данных в файл\n");
 		printf("4. Открытие графиков в программе wxMaxima\n");
         printf("5. Выход из программы\n");
     	printf("Выберите пункт меню: ");
@@ -61,10 +62,11 @@ int main() {
             break;
         case 2:
             printf("Длина переднего фронта для входного напряжения (Uvx): %f\n", dlit_vx);
-            printf("Длина переднего фронта для выходного напряжения (Uvix):%f\n", dlit_vix);
+            printf("Длина переднего фронта для выходного напряжения (Uvix): %f\n", dlit_vix);
             break;
         case 3:
-            print_file_func(filename, t, Uvx, Uvix, n, dlit_vx, dlit_vix);
+            print_file_func(t, Uvx, Uvix, n);
+            printf("Данные успешно сохранены в файлы\n");
             break;
         case 4: 
             system("\"C:\\maxima-5.49.0\\bin\\wxmaxima.exe\" control_calculation.wxmx");

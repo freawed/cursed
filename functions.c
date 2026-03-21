@@ -84,23 +84,42 @@ void print_func(float* t, float* Uvx, float* Uvix, int n) {
 }
 
 
-void print_file_func(const char *filename, float* t, float* Uvx, float* Uvix, int n, float dlit_vx, float dlit_vix) {
-    FILE *file = fopen(filename, "w");
-	if (file == NULL) {
-		printf("Error by print_file, file not open\n"); 
-		exit(1); 
-	}
-    fprintf(file, "+-----+----------+----------+----------+\n");
-    fprintf(file, "|  i  |    t     |   Uvx    |   Uvix   |\n");
-    fprintf(file, "+-----+----------+----------+----------+\n");
-    for (int i = 0; i < n; i++) {
-        fprintf(file, "| %3d | %8.3f | %8.3f | %8.3f |\n",
-               i, t[i], Uvx[i], Uvix[i]);
+void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
+    FILE *f1,*f2,*f3; 		 
+    f1=fopen("massiv_t.txt","w");
+    f2=fopen("massiv_Uvx.txt", "w"); 
+    f3=fopen("massiv_Uvix.txt", "w");
+
+    if (!f1 || !f2 || !f3) {
+        printf("Ошибка открытия файла\n");
+        exit(1);
     }
-    fprintf(file, "+-----+----------+----------+----------+\n");
-    fprintf(file, "\n");
-    fprintf(file, "Длина переднего фронта для входного напряжения (Uvx): %f\n", dlit_vx);
-    fprintf(file, "Длина переднего фронта для выходного напряжения (Uvix):%f\n", dlit_vix);
-    printf("Все данные записаны в файл");
-    fclose(file);
+
+    fprintf(f1, "t\n");
+    fprintf(f2, "Uvx\n");
+    fprintf(f3, "Uvix\n");
+
+    for (int i=0;i<n;i++) { 
+        fprintf(f1,"%6.3f\n",t[i]);
+        fprintf(f2,"%6.3f\n", Uvx[i]);        
+        fprintf(f3,"%6.3f\n",Uvix[i]);
+    }
+    fclose(f1);
+    fclose(f2);                         
+    fclose(f3);
+}
+
+
+void read_zast() {
+    FILE *f=fopen("zast.txt","r"); 
+    if (!f) {
+        printf("Ошибка открытия файла zast.txt\n");
+        return;
+    }
+    char ch;
+    while (!feof(f)) {
+        fscanf(f,"%c",&ch);            
+       printf("%c",ch);
+    }
+    fclose(f);                                 
 }
