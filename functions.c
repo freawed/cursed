@@ -11,27 +11,18 @@ void t_calc(float* t, float tk, float tn, float* dt, int n) {
 }
 
 
-void Uvx_calc(float* Uvx, float* Uvx_max, float* Uvx_min, float* t, int n, float t1, float tn, float a, float b) {
-
+void Uvx_calc(float* Uvx, float* t, int n, float t1, float tn, float a, float b) {
     for (int i = 0; i < n; i++) {
         if (t[i] <= t1) {
             Uvx[i] = a * (t[i] - tn);
         } else {
             Uvx[i] = a * (t1 - tn) - b * (t[i] - t1);
         }
-
-        if (Uvx[i] > *Uvx_max) {
-            *Uvx_max = Uvx[i];
-        }
-        if (Uvx[i] < *Uvx_min) {
-            *Uvx_min = Uvx[i];
-        }
     }
 }
 
 
-void Uvix_calc(float* Uvix, float* Uvx, int n, float Uvx1, float Uvx2, float U1, float U2, float* Uvix_max, float* Uvix_min) {
-
+void Uvix_calc(float* Uvix, float* Uvx, int n, float Uvx1, float Uvx2, float U1, float U2) {
     for (int i = 0; i < n; i++) {
         if (Uvx[i] < Uvx1) {
             Uvix[i] = U1;
@@ -41,33 +32,20 @@ void Uvix_calc(float* Uvix, float* Uvx, int n, float Uvx1, float Uvx2, float U1,
         } else {
             Uvix[i] = U2;
         }
-
-        if (Uvix[i] > *Uvix_max) {
-            *Uvix_max = Uvix[i];
-        }
-        if (Uvix[i] < *Uvix_min) {
-            *Uvix_min = Uvix[i];
-        }
     }
 }
 
 
-void leading_edge(float* Uvx, float* Uvix, float Uvx_min, float Uvix_min, float Uvx_max, float Uvix_max, float* dlit_vx, float* dlit_vix, float dt, int n) {
+void leading_edge(float* U, float Umin, float Umax, float* dlit, float dt, int n) {
+    *dlit = 0;
+    float U_fr1 = Umin + 0.9 * (Umax - Umin);
+    float U_fr2 = Umin + 0.1 * (Umax - Umin);
 
-    float Uvx_fr1 = Uvx_min + 0.9 * (Uvx_max - Uvx_min);
-    float Uvix_fr1 = Uvix_min + 0.9 * (Uvix_max - Uvix_min);
-    float Uvx_fr2 = Uvx_min + 0.1 * (Uvx_max - Uvx_min);
-    float Uvix_fr2 = Uvix_min + 0.1 * (Uvix_max - Uvix_min);
-
-    for (int i = 0; i < n - 1; i++)
-        if (Uvx[i] > Uvx_fr2 && Uvx[i] < Uvx_fr1 && Uvx[i + 1] > Uvx[i]) {
-            *dlit_vx += dt;
+    for (int i = 0; i < n - 1; i++) {
+        if (U[i] > U_fr2 && U[i] < U_fr1 && U[i + 1] > U[i]) {
+            *dlit += dt;
         }
-
-    for (int i = 0; i < n - 1; i++)
-        if (Uvix[i] > Uvix_fr2 && Uvix[i] < Uvix_fr1 && Uvix[i + 1] > Uvix[i]) {
-            *dlit_vix += dt;
-        }
+    }
 }
 
 
@@ -94,12 +72,7 @@ void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
         printf("Ошибка открытия файла\n");
         exit(1);
     }
-
-    fprintf(f1, "t\n");
-    fprintf(f2, "Uvx\n");
-    fprintf(f3, "Uvix\n");
-
-    for (int i=0;i<n;i++) { 
+    for (int i=0;i < n; i++) { 
         fprintf(f1,"%6.3f\n",t[i]);
         fprintf(f2,"%6.3f\n", Uvx[i]);        
         fprintf(f3,"%6.3f\n",Uvix[i]);
@@ -122,4 +95,16 @@ void read_zast() {
        printf("%c",ch);
     }
     fclose(f);                                 
+}
+
+
+void min_max_U(float* U, float* Umin, float* Umax, int n) {
+    for (int i = 0; i < n; i++) {
+        if (U[i] > *Umax) {
+            *Umax = U[i];
+        }
+        if (U[i] < *Umin) {
+            *Umin = U[i];
+        }
+    }
 }

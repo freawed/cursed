@@ -25,9 +25,9 @@ int main() {
         return 1;
     }
 
-    t = (float*)malloc(n * sizeof(float));
-    Uvx = (float*)malloc(n * sizeof(float));
-    Uvix = (float*)malloc(n * sizeof(float));
+    t = (float*)malloc((n + 50) * sizeof(float));
+    Uvx = (float*)malloc((n + 50) * sizeof(float));
+    Uvix = (float*)malloc((n + 50) * sizeof(float));
 
     if (t == NULL || Uvx == NULL || Uvix == NULL) {
         fprintf(stderr, "Ошибка: Не удалось выделить память.\n");
@@ -35,14 +35,15 @@ int main() {
     }
 
     t_calc(t, tk, tn, &dt, n);   
+    Uvx_calc(Uvx, t, n, t1, tn, a, b);
+    Uvix_calc(Uvix, Uvx, n, Uvx1, Uvx2, U1, U2);
 
-    Uvx_calc(Uvx, &Uvx_max, &Uvx_min, t, n, t1, tn, a, b);
+    min_max_U(Uvx, &Uvx_min, &Uvx_max, n);
+    min_max_U(Uvix, &Uvix_min, &Uvix_max, n);
 
-    Uvix_calc(Uvix, Uvx, n, Uvx1, Uvx2, U1, U2, &Uvix_max, &Uvix_min);
-
-    leading_edge(Uvx, Uvix, Uvx_min, Uvix_min, Uvx_max, Uvix_max, &dlit_vx, &dlit_vix, dt, n);
-
-
+    leading_edge(Uvx, Uvx_min, Uvx_max, &dlit_vx, dt, n);
+    leading_edge(Uvix, Uvix_min, Uvix_max, &dlit_vix, dt, n);
+    
     while (choice != 5) {
         printf("\n");
 		printf("======Меню======\n");
@@ -58,6 +59,9 @@ int main() {
         switch (choice)
         {
         case 1:
+            t_calc(t, tk, tn, &dt, n);   
+            Uvx_calc(Uvx, t, n, t1, tn, a, b);
+            Uvix_calc(Uvix, Uvx, n, Uvx1, Uvx2, U1, U2);
             print_func(t, Uvx, Uvix, n);
             break;
         case 2:
@@ -65,11 +69,14 @@ int main() {
             printf("Длина переднего фронта для выходного напряжения (Uvix): %f\n", dlit_vix);
             break;
         case 3:
-            print_file_func(t, Uvx, Uvix, n);
+            t_calc(t, tk, tn, &dt, 50);   
+            Uvx_calc(Uvx, t, 50, t1, tn, a, b);
+            Uvix_calc(Uvix, Uvx, 50, Uvx1, Uvx2, U1, U2);
+            print_file_func(t, Uvx, Uvix, 50);
             printf("Данные успешно сохранены в файлы\n");
             break;
         case 4: 
-            system("\"C:\\maxima-5.49.0\\bin\\wxmaxima.exe\" control_calculation.wxmx");
+            system("\"C:\\maxima-5.49.0\\bin\\wxmaxima.exe\" graf.wxmx");
             break;
         case 5:
             printf("Выход из программы\n");
