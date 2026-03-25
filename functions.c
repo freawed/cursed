@@ -11,7 +11,8 @@ void t_calc(float* t, float tk, float tn, float* dt, int n) {
 }
 
 
-void Uvx_calc(float* Uvx, float* t, int n, float t1, float tn, float a, float b) {
+void Uvx_calc(float* Uvx, float* t, int n, float tn) {
+    float t1 = 22.5, a = 12, b = 12;
     for (int i = 0; i < n; i++) {
         if (t[i] <= t1) {
             Uvx[i] = a * (t[i] - tn);
@@ -22,7 +23,8 @@ void Uvx_calc(float* Uvx, float* t, int n, float t1, float tn, float a, float b)
 }
 
 
-void Uvix_calc(float* Uvix, float* Uvx, int n, float Uvx1, float Uvx2, float U1, float U2) {
+void Uvix_calc(float* Uvix, float* Uvx, int n) {
+    float Uvx1 = 20, Uvx2 = 100, U1 = 20, U2 = 150;
     for (int i = 0; i < n; i++) {
         if (Uvx[i] < Uvx1) {
             Uvix[i] = U1;
