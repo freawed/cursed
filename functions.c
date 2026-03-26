@@ -110,3 +110,43 @@ void min_max_U(float* U, float* Umin, float* Umax, int n) {
         }
     }
 }
+
+
+double dlit_with_accuracy(float* t, float* Uvx, float* Uvix, double eps, float tn, float tk, int flag) {
+    int n = 11;
+    double p = 1;
+    double par = 1e+10;
+    float par1 = 0;
+    float dt;
+    float Uvx_max = -10000, Uvx_min = 10000;
+    float Uvix_max = -10000, Uvix_min = 10000;
+    
+    while (p > eps) {
+        t = (float*)malloc(n * sizeof(float));
+        Uvx = (float*)malloc(n * sizeof(float));
+        Uvix = (float*)malloc(n* sizeof(float));
+
+        if (t == NULL || Uvx == NULL || Uvix == NULL) {
+            fprintf(stderr, "Ошибка: Не удалось выделить память.\n");
+            return 1;
+        }     
+        
+        t_calc(t, tk, tn, &dt, n);   
+        Uvx_calc(Uvx, t, n, tn);
+        Uvix_calc(Uvix, Uvx, n);
+
+        min_max_U(Uvx, &Uvx_min, &Uvx_max, n);
+        min_max_U(Uvix, &Uvix_min, &Uvix_max, n);
+        if (flag == 0) {
+            leading_edge(Uvx, Uvx_min, Uvx_max, &par1, dt, n);
+        } else {
+            leading_edge(Uvix, Uvix_min, Uvix_max, &par1, dt, n);
+        }
+        
+        p = fabs(par - par1) / par1;
+
+        par = par1;
+        n = 2 * n;
+    }
+    return par;
+}

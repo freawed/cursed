@@ -120,7 +120,15 @@ int main() {
             system("\"C:\\maxima-5.49.0\\bin\\wxmaxima.exe\" graf.wxmx");
             break;
         case 5:
-            printf("5");
+            float eps;
+            printf("Задайте начальную погрешность: ");
+            scanf("%f", &eps);
+            printf("\n");
+            double dlit_Uvx = dlit_with_accuracy(t, Uvx, Uvix, eps, tn, tk, 0);
+            double dlit_Uvix = dlit_with_accuracy(t, Uvix, Uvix, eps, tn, tk, 1);
+
+            printf("Длительность переднего фронта для Uvx с погрешностью %f: %f\n", eps, dlit_Uvx);
+            printf("Длительность переднего фронта для Uvix с погрешностью %f: %f\n", eps, dlit_Uvix);
         case 6:
             printf("Выход из программы\n");
             break;
