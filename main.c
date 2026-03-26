@@ -129,6 +129,7 @@ int main() {
 
             printf("Длительность переднего фронта для Uvx с погрешностью %f: %f\n", eps, dlit_Uvx);
             printf("Длительность переднего фронта для Uvix с погрешностью %f: %f\n", eps, dlit_Uvix);
+            break;
         case 6:
             printf("Выход из программы\n");
             break;

@@ -118,10 +118,11 @@ double dlit_with_accuracy(float* t, float* Uvx, float* Uvix, double eps, float t
     double par = 1e+10;
     float par1 = 0;
     float dt;
-    float Uvx_max = -10000, Uvx_min = 10000;
-    float Uvix_max = -10000, Uvix_min = 10000;
     
     while (p > eps) {
+        float Uvx_max = -10000, Uvx_min = 10000;
+        float Uvix_max = -10000, Uvix_min = 10000;
+        
         t = (float*)malloc(n * sizeof(float));
         Uvx = (float*)malloc(n * sizeof(float));
         Uvix = (float*)malloc(n* sizeof(float));
@@ -143,10 +144,15 @@ double dlit_with_accuracy(float* t, float* Uvx, float* Uvix, double eps, float t
             leading_edge(Uvix, Uvix_min, Uvix_max, &par1, dt, n);
         }
         
+        if (par1 == 0) break;
         p = fabs(par - par1) / par1;
 
         par = par1;
         n = 2 * n;
+
+        free(t);
+        free(Uvx);
+        free(Uvix);
     }
     return par;
 }
