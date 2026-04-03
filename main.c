@@ -1,7 +1,7 @@
 #include "functions.h"
 #include <stdio.h>
 #include <stdlib.h>
-// chcp 65001 - для текста на русском в консоль
+// chcp65001 - для текста на русском в консоль
 
 
 
@@ -26,7 +26,7 @@ int main() {
 
     float *t, *Uvx, *Uvix;
     
-    while (choice != 5) {
+    while (choice != 6  ) {
         printf("\n");
 		printf("======Меню======\n");
 		printf("1. Вывод таблицы входного и выходного напряжения в терминал\n");
@@ -124,11 +124,11 @@ int main() {
             printf("Задайте начальную погрешность: ");
             scanf("%f", &eps);
             printf("\n");
-            double dlit_Uvx = dlit_with_accuracy(t, Uvx, Uvix, eps, tn, tk, 0);
-            double dlit_Uvix = dlit_with_accuracy(t, Uvix, Uvix, eps, tn, tk, 1);
+            dlit_with_accuracy(t, Uvx, Uvix, eps, tn, tk, 0);
+            dlit_with_accuracy(t, Uvix, Uvix, eps, tn, tk, 1);
 
-            printf("Длительность переднего фронта для Uvx с погрешностью %f: %f\n", eps, dlit_Uvx);
-            printf("Длительность переднего фронта для Uvix с погрешностью %f: %f\n", eps, dlit_Uvix);
+            // printf("Длительность переднего фронта для Uvx с погрешностью %f: %f\n", eps, dlit_Uvx);
+            // printf("Длительность переднего фронта для Uvix с погрешностью %f: %f\n", eps, dlit_Uvix);
             break;
         case 6:
             printf("Выход из программы\n");

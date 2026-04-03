@@ -112,7 +112,7 @@ void min_max_U(float* U, float* Umin, float* Umax, int n) {
 }
 
 
-double dlit_with_accuracy(float* t, float* Uvx, float* Uvix, double eps, float tn, float tk, int flag) {
+void dlit_with_accuracy(float* t, float* Uvx, float* Uvix, double eps, float tn, float tk, int flag) {
     int n = 11;
     double p = 1;
     double par = 1e+10;
@@ -129,7 +129,7 @@ double dlit_with_accuracy(float* t, float* Uvx, float* Uvix, double eps, float t
 
         if (t == NULL || Uvx == NULL || Uvix == NULL) {
             fprintf(stderr, "Ошибка: Не удалось выделить память.\n");
-            return 1;
+            break;
         }     
         
         t_calc(t, tk, tn, &dt, n);   
@@ -149,10 +149,11 @@ double dlit_with_accuracy(float* t, float* Uvx, float* Uvix, double eps, float t
 
         par = par1;
         n = 2 * n;
+        printf("n=%d, parametr=%f, pogreshnost=%f\n", n, par1, p);
 
         free(t);
         free(Uvx);
         free(Uvix);
     }
-    return par;
+
 }
