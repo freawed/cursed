@@ -10,5 +10,6 @@ void print_file_func(float* t, float* Uvx, float* Uvix, int n);
 void read_zast();
 void min_max_U(float* U, float* Umin, float* Umax, int n);
 void dlit_with_accuracy(double eps, float tn, float tk, int flag);
-void calculate_all(float* t, float* Uvx, float* Uvix, float tn, float tk, float* dt, int n);
+void calc_all(float* t, float* Uvx, float* Uvix, float tn, float tk, float* dt, int n);
+void input_params(int* n, float* tn, float* tk);
 #endif

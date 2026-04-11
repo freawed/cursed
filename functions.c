@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "functions.h"
 
+
+// функция расчета времени
 void t_calc(float* t, float tk, float tn, float* dt, int n) {
     *dt = (tk - tn) / (n - 1);
     for (int i = 0; i < n; i++) {
@@ -10,7 +12,7 @@ void t_calc(float* t, float tk, float tn, float* dt, int n) {
     } 
 }
 
-
+// функция расчета входного напряжения
 void Uvx_calc(float* Uvx, float* t, int n, float tn) {
     float t1 = 22.5, a = 12, b = 12;
     for (int i = 0; i < n; i++) {
@@ -22,7 +24,7 @@ void Uvx_calc(float* Uvx, float* t, int n, float tn) {
     }
 }
 
-
+// функция расчета выходного напряжения
 void Uvix_calc(float* Uvix, float* Uvx, int n) {
     float Uvx1 = 20, Uvx2 = 100, U1 = 20, U2 = 150;
     for (int i = 0; i < n; i++) {
@@ -37,7 +39,14 @@ void Uvix_calc(float* Uvix, float* Uvx, int n) {
     }
 }
 
+// функция расчета времени, входного и выходного напряжения
+void calc_all(float* t, float* Uvx, float* Uvix, float tn, float tk, float* dt, int n) {
+    t_calc(t, tk, tn, dt, n);
+    Uvx_calc(Uvx, t, n, tn);
+    Uvix_calc(Uvix, Uvx, n);
+}
 
+// функция расчета параметра
 void leading_edge(float* U, float Umin, float Umax, float* dlit, float dt, int n) {
     *dlit = 0;
     float U_fr1 = Umin + 0.9 * (Umax - Umin);
@@ -50,7 +59,7 @@ void leading_edge(float* U, float Umin, float Umax, float* dlit, float dt, int n
     }
 }
 
-
+// функция вывода основной таблицы
 void print_func(float* t, float* Uvx, float* Uvix, int n) {
     printf("\n");
     printf("+-----+----------+----------+----------+\n");
@@ -63,7 +72,7 @@ void print_func(float* t, float* Uvx, float* Uvix, int n) {
     printf("+-----+----------+----------+----------+\n");
 }
 
-
+// функция записи даных в файл
 void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
     FILE *f1,*f2,*f3; 		 
     f1=fopen("massiv_t.txt","w");
@@ -84,7 +93,7 @@ void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
     fclose(f3);
 }
 
-
+// функция чтения заставки
 void read_zast() {
     FILE *f=fopen("zast.txt","r"); 
     if (!f) {
@@ -99,7 +108,7 @@ void read_zast() {
     fclose(f);                                 
 }
 
-
+// функция нахождения мимнимального и максимального напряжения
 void min_max_U(float* U, float* Umin, float* Umax, int n) {
     for (int i = 0; i < n; i++) {
         if (U[i] > *Umax) {
@@ -111,7 +120,7 @@ void min_max_U(float* U, float* Umin, float* Umax, int n) {
     }
 }
 
-
+// функция расчета и вывода параметра с погрешностью
 void dlit_with_accuracy(double eps, float tn, float tk, int flag) {
     int n = 11;
     double p = 1;
@@ -136,10 +145,7 @@ void dlit_with_accuracy(double eps, float tn, float tk, int flag) {
             fprintf(stderr, "Ошибка: Не удалось выделить память.\n");
             break;
         }     
-        
-        t_calc(t, tk, tn, &dt, n);   
-        Uvx_calc(Uvx, t, n, tn);
-        Uvix_calc(Uvix, Uvx, n);
+        calc_all(t, Uvx, Uvix, tn, tk, &dt, n);
 
         min_max_U(Uvx, &Uvx_min, &Uvx_max, n);
         min_max_U(Uvix, &Uvix_min, &Uvix_max, n);
@@ -154,18 +160,34 @@ void dlit_with_accuracy(double eps, float tn, float tk, int flag) {
 
         par = par1;
         n = 2 * n;
-        printf("n = %6d | parametr = %8f | pogreshnost = %8f\n", n, par1, p);
+        printf("n = %6d | parametr = %9f | pogreshnost = %9f\n", n, par1, p);
 
         free(t);
         free(Uvx);
         free(Uvix);
     }
-
 }
 
-void calculate_all(float* t, float* Uvx, float* Uvix, float tn, float tk, float* dt, int n) {
-    t_calc(t, tk, tn, dt, n);
-    Uvx_calc(Uvx, t, n, tn);
-    Uvix_calc(Uvix, Uvx, n);
+
+// функция выбора способа ввода параметров
+void input_params(int* n, float* tn, float* tk) {
+    int choice;
+    printf("1. Ввод с клавиатуры\n2. Ввод из файла\nВыберите способ: ");
+    scanf("%d", &choice);
+    
+    if (choice == 1) {
+    printf("Введите кол-во точек для контрольного расчета: ");
+    if (scanf("%d", n) != 1 || *n <= 1) {
+        fprintf(stderr, "Ошибка: Некорректное количество точек.\n");
+        return;
+    }
+    printf("Введите начальное время: ");
+    scanf("%f", tn);
+    printf("Введите конечное время: ");
+    scanf("%f", tk);
+    } else {
+        FILE* f = fopen("params.txt", "r");
+        fscanf(f, "%d%f%f", n, tn, tk);
+        fclose(f);
+    }
 }
-calculate_all(t, Uvx, Uvix, tn, tk, &dt, n);

@@ -19,18 +19,7 @@ int main() {
     printf("\n"); 
 
     // ввод количества точек для расчета    
-    printf("Введите кол-во точек для контрольного расчета: ");
-    if (scanf("%d", &n) != 1 || n <= 1) {
-        fprintf(stderr, "Ошибка: Некорректное количество точек.\n");
-        return 1;
-    }
-
-    // ввод начашльного и конечного времени
-    printf("Введите начальное время: ");
-    scanf("%f", &tn);
-    printf("Введите конечное время: ");
-    scanf("%f", &tk);
-
+    input_params(&n, &tn, &tk);
     float *t, *Uvx, *Uvix;
     
     // меню и основные функции
@@ -65,10 +54,7 @@ int main() {
                 fprintf(stderr, "Ошибка: Не удалось выделить память.\n");
                 return 1;
             }   
-            
-            t_calc(t, tk, tn, &dt, n);   
-            Uvx_calc(Uvx, t, n, tn);
-            Uvix_calc(Uvix, Uvx, n);
+            calc_all(t, Uvx, Uvix, tn, tk, &dt, n);
             print_func(t, Uvx, Uvix, n);
 
             free(t);
@@ -89,10 +75,8 @@ int main() {
                 return 1;
             }
             
-            t_calc(t, tk, tn, &dt, n);   
-            Uvx_calc(Uvx, t, n, tn);
-            Uvix_calc(Uvix, Uvx, n);
-            
+            calc_all(t, Uvx, Uvix, tn, tk, &dt, n);
+
             min_max_U(Uvx, &Uvx_min, &Uvx_max, n);
             min_max_U(Uvix, &Uvix_min, &Uvix_max, n);
 
@@ -117,9 +101,7 @@ int main() {
                 return 1;
             }
 
-            t_calc(t, tk, tn, &dt, file_size);   
-            Uvx_calc(Uvx, t, file_size, tn);
-            Uvix_calc(Uvix, Uvx, file_size);
+            calc_all(t, Uvx, Uvix, tn, tk, &dt, file_size);
             print_file_func(t, Uvx, Uvix, file_size);
             printf("Данные успешно сохранены в файл\n");
 
