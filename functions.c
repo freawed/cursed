@@ -72,7 +72,7 @@ void print_func(float* t, float* Uvx, float* Uvix, int n) {
     printf("+-----+----------+----------+----------+\n");
 }
 
-// функция записи даных в файл
+// функция записи данных в файл
 void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
     FILE *f1,*f2,*f3; 		 
     f1=fopen("massiv_t.txt","w");
@@ -169,25 +169,73 @@ void dlit_with_accuracy(double eps, float tn, float tk, int flag) {
 }
 
 
-// функция выбора способа ввода параметров
+// функция ввода количества точек, начального и конечного времени
 void input_params(int* n, float* tn, float* tk) {
     int choice;
-    printf("1. Ввод с клавиатуры\n2. Ввод из файла\nВыберите способ: ");
-    scanf("%d", &choice);
-    
-    if (choice == 1) {
-    printf("Введите кол-во точек для контрольного расчета: ");
-    if (scanf("%d", n) != 1 || *n <= 1) {
-        fprintf(stderr, "Ошибка: Некорректное количество точек.\n");
-        return;
+
+    // выбор способа ввода
+    while (1) {
+        printf("1. Ввод с клавиатуры\n2. Ввод из файла\nВыберите способ: ");
+        if (scanf("%d", &choice) != 1) {
+            printf("Ошибка ввода! Введите число.\n");
+            printf("\n");
+            while (getchar() != '\n'); // очистка буфера
+            continue;
+        }
+        if (choice == 1 || choice == 2)
+            break;
+        printf("Неверный выбор. Попробуйте снова.\n");
     }
-    printf("Введите начальное время: ");
-    scanf("%f", tn);
-    printf("Введите конечное время: ");
-    scanf("%f", tk);
+
+    // ввод данных с клавиатуры
+    if (choice == 1) {
+        // ввод n
+        while (1) {
+            printf("Введите кол-во точек: ");
+            if (scanf("%d", n) != 1 || *n <= 1) {
+                printf("Ошибка! n должно быть > 1\n");
+                printf("\n");
+                while (getchar() != '\n');
+            } else break;
+        }
+
+        // ввод tn
+        while (1) {
+            printf("Введите начальное время tn: ");
+            if (scanf("%f", tn) != 1) {
+                printf("Ошибка ввода!\n");
+                printf("\n");
+                while (getchar() != '\n');
+            } else break;
+        }
+
+        // ввод tk
+        while (1) {
+            printf("Введите конечное время tk: ");
+            if (scanf("%f", tk) != 1 || *tk <= *tn) {
+                printf("Ошибка! tk должно быть больше tn\n");
+                while (getchar() != '\n');
+            } else break;
+        }
+
+    // ввод данных из файла
     } else {
         FILE* f = fopen("params.txt", "r");
-        fscanf(f, "%d%f%f", n, tn, tk);
+
+        if (!f) {
+            printf("Ошибка: не удалось открыть файл params.txt\n");
+            exit(1);
+        }
+        if (fscanf(f, "%d%f%f", n, tn, tk) != 3) {
+            printf("Ошибка: некорректные данные в файле\n");
+            fclose(f);
+            exit(1);
+        }
+        if (*n <= 1 || *tk <= *tn) {
+            printf("Ошибка: неверные значения в файле\n");
+            fclose(f);
+            exit(1);
+        }
         fclose(f);
     }
 }
