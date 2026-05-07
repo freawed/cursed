@@ -17,15 +17,12 @@ int main() {
     float tn, tk, dt;
     // tn = 10, tk = 35
           
-    // чтение заставки
     read_zast();
     printf("\n"); 
-
-    // ввод количества точек для расчета, начального и конечного времени    
+    
     input_params(&n, &tn, &tk);
     float *t, *Uvx, *Uvix;
-    
-    // меню и основные функции  
+      
     while (choice != 6 ) {
         printf("\n");
 		printf("======Меню======\n");
@@ -37,7 +34,6 @@ int main() {
         printf("6. Выход из программы\n");
     	printf("Выберите пункт меню: ");
 
-        // выбор действия
         if (scanf("%d", &choice) != 1) {
             printf("Ошибка ввода! Введите число.\n");
             while (getchar() != '\n');
@@ -46,8 +42,6 @@ int main() {
         printf("\n");
 
         switch (choice) {
-
-        // расчет и вывод основной таблицы
         case 1:
             t = (float*)malloc(n * sizeof(float));
             Uvx = (float*)malloc(n * sizeof(float));
@@ -65,7 +59,6 @@ int main() {
             free(Uvix);
             break;
 
-        // расчет и вывод параметра
         case 2:
             Uvx_max = -10000, Uvx_min = 10000;
             Uvix_max = -10000, Uvix_min = 10000;
@@ -95,7 +88,6 @@ int main() {
             free(Uvix);            
             break;
 
-        // запись даных в файл
         case 3:
             t = (float*)malloc(file_size * sizeof(float));
             Uvx = (float*)malloc(file_size * sizeof(float));
@@ -115,12 +107,10 @@ int main() {
             free(Uvix);            
             break;
 
-        // открытие программы с графиками 
         case 4: 
             system("\"C:\\maxima-5.49.0\\bin\\wxmaxima.exe\" graf.wxmx");
             break;
             
-        // расчет и вывод параметра с погрешностью
         case 5:
             printf("Задайте начальную погрешность: ");
             scanf("%f", &eps);
@@ -135,8 +125,7 @@ int main() {
             printf("Расчет параметра с погрешностью для Uvix:\n");
             dlit_with_accuracy(eps, tn, tk, 1);
             break;
-            
-        // завершение работы программы      
+                 
         case 6:
             printf("Выход из программы\n");
             break;

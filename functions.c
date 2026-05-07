@@ -4,7 +4,6 @@
 #include "functions.h"
 
 
-// функция расчета времени
 void t_calc(float* t, float tk, float tn, float* dt, int n) {
     *dt = (tk - tn) / (n - 1);
     for (int i = 0; i < n; i++) {
@@ -12,7 +11,6 @@ void t_calc(float* t, float tk, float tn, float* dt, int n) {
     } 
 }
 
-// функция расчета входного напряжения
 void Uvx_calc(float* Uvx, float* t, int n, float tn) {
     float t1 = 22.5, a = 12, b = 12;
     for (int i = 0; i < n; i++) {
@@ -24,7 +22,6 @@ void Uvx_calc(float* Uvx, float* t, int n, float tn) {
     }
 }
 
-// функция расчета выходного напряжения
 void Uvix_calc(float* Uvix, float* Uvx, int n) {
     float Uvx1 = 20, Uvx2 = 100, U1 = 20, U2 = 150;
     for (int i = 0; i < n; i++) {
@@ -39,14 +36,12 @@ void Uvix_calc(float* Uvix, float* Uvx, int n) {
     }
 }
 
-// функция расчета времени, входного и выходного напряжения
 void calc_all(float* t, float* Uvx, float* Uvix, float tn, float tk, float* dt, int n) {
     t_calc(t, tk, tn, dt, n);
     Uvx_calc(Uvx, t, n, tn);
     Uvix_calc(Uvix, Uvx, n);
 }
 
-// функция расчета параметра
 void leading_edge(float* U, float Umin, float Umax, float* dlit, float dt, int n) {
     *dlit = 0;
     float U_fr1 = Umin + 0.9 * (Umax - Umin);
@@ -59,7 +54,6 @@ void leading_edge(float* U, float Umin, float Umax, float* dlit, float dt, int n
     }
 }
 
-// функция вывода основной таблицы
 void print_func(float* t, float* Uvx, float* Uvix, int n) {
     printf("\n");
     printf("+-----+----------+----------+----------+\n");
@@ -72,7 +66,6 @@ void print_func(float* t, float* Uvx, float* Uvix, int n) {
     printf("+-----+----------+----------+----------+\n");
 }
 
-// функция записи данных в файл
 void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
     FILE *f1,*f2,*f3; 		 
     f1=fopen("massiv_t.txt","w");
@@ -93,7 +86,6 @@ void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
     fclose(f3);
 }
 
-// функция чтения заставки
 void read_zast() {
     FILE *f=fopen("zast.txt","r"); 
     if (!f) {
@@ -108,7 +100,6 @@ void read_zast() {
     fclose(f);                                 
 }
 
-// функция нахождения мимнимального и максимального напряжения
 void min_max_U(float* U, float* Umin, float* Umax, int n) {
     for (int i = 0; i < n; i++) {
         if (U[i] > *Umax) {
@@ -120,7 +111,6 @@ void min_max_U(float* U, float* Umin, float* Umax, int n) {
     }
 }
 
-// функция расчета и вывода параметра с погрешностью
 void dlit_with_accuracy(double eps, float tn, float tk, int flag) {
     int n = 11;
     double p = 1;
@@ -168,18 +158,15 @@ void dlit_with_accuracy(double eps, float tn, float tk, int flag) {
     }
 }
 
-
-// функция ввода количества точек, начального и конечного времени
 void input_params(int* n, float* tn, float* tk) {
     int choice;
 
-    // выбор способа ввода
     while (1) {
         printf("1. Ввод с клавиатуры\n2. Ввод из файла\nВыберите способ: ");
         if (scanf("%d", &choice) != 1) {
             printf("Ошибка ввода! Введите число.\n");
             printf("\n");
-            while (getchar() != '\n'); // очистка буфера
+            while (getchar() != '\n');
             continue;
         }
         if (choice == 1 || choice == 2)
@@ -187,9 +174,7 @@ void input_params(int* n, float* tn, float* tk) {
         printf("Неверный выбор. Попробуйте снова.\n");
     }
 
-    // ввод данных с клавиатуры
     if (choice == 1) {
-        // ввод n
         while (1) {
             printf("Введите кол-во точек: ");
             if (scanf("%d", n) != 1 || *n <= 1) {
@@ -199,7 +184,6 @@ void input_params(int* n, float* tn, float* tk) {
             } else break;
         }
 
-        // ввод tn
         while (1) {
             printf("Введите начальное время tn: ");
             if (scanf("%f", tn) != 1) {
@@ -209,7 +193,6 @@ void input_params(int* n, float* tn, float* tk) {
             } else break;
         }
 
-        // ввод tk
         while (1) {
             printf("Введите конечное время tk: ");
             if (scanf("%f", tk) != 1 || *tk <= *tn) {
@@ -218,7 +201,6 @@ void input_params(int* n, float* tn, float* tk) {
             } else break;
         }
 
-    // ввод данных из файла
     } else {
         FILE* f = fopen("params.txt", "r");
 
