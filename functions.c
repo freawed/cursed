@@ -84,9 +84,9 @@ void print_file_func(float* t, float* Uvx, float* Uvix, int n) {
         exit(1);
     }
     for (int i=0;i < n; i++) { 
-        fprintf(f1,"%6.3f\n",t[i]);
-        fprintf(f2,"%6.3f\n", Uvx[i]);        
-        fprintf(f3,"%6.3f\n",Uvix[i]);
+        fprintf(f1,"%.3f\n",t[i]);
+        fprintf(f2,"%.3f\n", Uvx[i]);        
+        fprintf(f3,"%.3f\n", Uvix[i]);
     }
     fclose(f1);
     fclose(f2);                         

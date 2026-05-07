@@ -1,13 +1,15 @@
 #include "functions.h"
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
+#include <math.h>
 // chcp 65001
 
 
 
 int main() {
     int choice = 0;
-    int n;
+    int n = 0;
     int file_size = 50;
     float eps;
     float dlit_vx = 0.0f, dlit_vix = 0.0f;
@@ -23,7 +25,7 @@ int main() {
     input_params(&n, &tn, &tk);
     float *t, *Uvx, *Uvix;
     
-    // меню и основные функции
+    // меню и основные функции  
     while (choice != 6 ) {
         printf("\n");
 		printf("======Меню======\n");
